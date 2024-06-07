@@ -2,10 +2,10 @@
   (:require
    [payroll.payroll_interface :refer [calc-pay dispose is-today-payday]]))
 
-(defn- is-last-day-of-motth [_] true)
+(defn- is-last-day-of-month [_] true)
 
 (defmethod is-today-payday :monthly [_ today]
-  (is-last-day-of-motth today))
+  (is-last-day-of-month today))
 
 (defn- is-friday [_] true)
 
@@ -42,21 +42,21 @@
     (+ (* total-sales commission-rate) base-pay)))
 
 (defmethod dispose :mail [{:keys [id amount disposition]}]
-  {:type :email
+  {:type :mail
    :id id
    :name (nth disposition 1)
    :address (nth disposition 2)
    :amount amount})
 
 (defmethod dispose :diposit [{:keys [id amount disposition]}]
-  {:type :email
+  {:type :deposit
    :id id
    :routing (nth disposition 1)
    :address (nth disposition 2)
    :amount amount})
 
 (defmethod dispose :paymaster [{:keys [id amount disposition]}]
-  {:type :email
+  {:type :paymster
    :id id
    :paymaster (nth disposition 1)
    :amount amount})
