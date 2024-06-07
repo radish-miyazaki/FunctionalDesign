@@ -38,7 +38,7 @@
         my-sales-receipts (get sales-receipts (:id employee))
         [_ base-pay commission-rate] (:pay-class employee)
         sales (map second my-sales-receipts)
-        total-sales (reduce * sales)]
+        total-sales (reduce + sales)]
     (+ (* total-sales commission-rate) base-pay)))
 
 (defmethod dispose :mail [{:keys [id amount disposition]}]
@@ -48,15 +48,15 @@
    :address (nth disposition 2)
    :amount amount})
 
-(defmethod dispose :diposit [{:keys [id amount disposition]}]
+(defmethod dispose :deposit [{:keys [id amount disposition]}]
   {:type :deposit
    :id id
    :routing (nth disposition 1)
-   :address (nth disposition 2)
+   :account (nth disposition 2)
    :amount amount})
 
 (defmethod dispose :paymaster [{:keys [id amount disposition]}]
-  {:type :paymster
+  {:type :paymaster
    :id id
    :paymaster (nth disposition 1)
    :amount amount})

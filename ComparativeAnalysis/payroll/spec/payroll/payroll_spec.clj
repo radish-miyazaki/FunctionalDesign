@@ -2,6 +2,7 @@
   (:require
    [clojure.spec.alpha :as s]
    [payroll.payroll :refer :all]
+   [payroll.payroll_implementation]
    [payroll.payroll_interface :as pi]
    [speclj.core :refer :all])
   (:import
