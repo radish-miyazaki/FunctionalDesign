@@ -32,24 +32,42 @@
 ;;               (copy {:getchar str-read :putchar str-write})
 ;;               (should= "abcdef" @str-out)))
 
+;; (describe "copy"
+;;           (it "can read and write str-read and str-write"
+;;               (let [device {:device-type :test-device
+;;                             :input (atom "abcdef")
+;;                             :output (atom nil)}]
+;;                 (copy device)
+;;                 (should= "abcdef" @(:output device)))))
+
+;; (defmethod getchar :test-device [device]
+;;   (let [input (:input device)
+;;         c (first @input)]
+;;     (if (nil? c)
+;;       :eof
+;;       (do
+;;         (swap! input rest)
+;;         c))))
+
+;; (defmethod putchar :test-device [device c]
+;;   (let [output (:output device)]
+;;     (swap! output str c)))
+
+(defrecord str-device [in-atom out-atom]
+  device
+  (getchar [_]
+    (let [c (first @in-atom)]
+      (if (nil? c)
+        :eof
+        (do
+          (swap! in-atom rest)
+          c))))
+  (putchar [_ c]
+    (swap! out-atom str c)))
+
 (describe "copy"
-          (it "can read and write str-read and str-write"
-              (let [device {:device-type :test-device
-                            :input (atom "abcdef")
-                            :output (atom nil)}]
+          (it "can read and write using str-read and str-write"
+              (let [device (->str-device (atom "abcdef") (atom nil))]
                 (copy device)
-                (should= "abcdef" @(:output device)))))
-
-(defmethod getchar :test-device [device]
-  (let [input (:input device)
-        c (first @input)]
-    (if (nil? c)
-      :eof
-      (do
-        (swap! input rest)
-        c))))
-
-(defmethod putchar :test-device [device c]
-  (let [output (:output device)]
-    (swap! output str c)))
+                (should= "abcdef" @(:out-atom device)))))
 

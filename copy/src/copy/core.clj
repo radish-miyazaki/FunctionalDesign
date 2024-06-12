@@ -14,8 +14,12 @@
 ;;         ((:putchar device) c)
 ;;         (recur device)))))
 
-(defmulti getchar (fn [device] (:device-type device)))
-(defmulti putchar (fn [device _] (:device-type device)))
+;; (defmulti getchar (fn [device] (:device-type device)))
+;; (defmulti putchar (fn [device _] (:device-type device)))
+
+(defprotocol device
+  (getchar [_])
+  (putchar [_ c]))
 
 (defn copy [device]
   (let [c (getchar device)]
@@ -24,6 +28,4 @@
       (do
         (putchar device c)
         (recur device)))))
-
-
 
