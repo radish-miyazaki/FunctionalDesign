@@ -26,7 +26,7 @@
                 "\t8 1/2\t2.0\n"
                 "\tEraserhead\t3.5\n"
                 "You owed 7.5\n"
-                "You earned 3 frequent render points\n")
+                "You earned 3 frequent renter points\n")
            (process-order
             (make-normal-policy)
             (make-text-formatter)

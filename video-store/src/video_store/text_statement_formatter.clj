@@ -15,9 +15,7 @@
      (format "Rental Record for %s\n" customer-name)
      (apply str
             (for [movie movies]
-              (format "\t%s\t%.1f\n"
-                      (:title movie)
-                      (:price movie)))
-            (format "You owed %.1f\n" owed)
-            (format "You earned %d frequent render points\n" points)))))
+              (format "\t%s\t%.1f\n" (:title movie) (:price movie))))
+     (format "You owed %.1f\n" owed)
+     (format "You earned %d frequent renter points\n" points))))
 

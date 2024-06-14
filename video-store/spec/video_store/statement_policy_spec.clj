@@ -32,6 +32,7 @@
              (make-rental-order
               @customer
               [(make-rental @new-release-1 3)]))))
+
   (it "makes statement for two new releases"
    (should= {:customer-name "CUSTOMER"
              :movies [{:title "new release 1"
@@ -80,7 +81,7 @@
               :movies [{:title "regular 1" :price 2.0}
                        {:title "regular 2" :price 2.0}
                        {:title "new release 1" :price 3.0}]
-             :owed 7.5
+             :owed 5.0
              :points 3}
              (make-statement-data
               (make-buy-two-get-one-free-policy)
