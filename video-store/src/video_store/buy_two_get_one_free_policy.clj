@@ -2,7 +2,7 @@
   (:require
    [video-store.normal-statement-policy :as normal]
    [video-store.statement-policy :refer :all]))
-
+ 
 (derive ::buy-two-get-one-free ::normal/normal)
 
 (defn make-buy-two-get-one-free-policy []
