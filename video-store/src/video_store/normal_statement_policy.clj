@@ -4,7 +4,7 @@
 
 (defn make-normal-policy [] {:type ::normal})
 
-(defmethod determine-amount [::normal :regular] 
+(defmethod determine-amount [::normal :regular]
   [_policy rental]
   (let [days (:days rental)]
     (if (> days 2)

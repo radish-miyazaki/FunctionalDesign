@@ -10,7 +10,7 @@
 (defn make-rental [movie days]
   {:movie movie
    :days days})
- 
+
 (defn make-rental-order [customer rentals]
   {:customer customer
    :rentals rentals})
