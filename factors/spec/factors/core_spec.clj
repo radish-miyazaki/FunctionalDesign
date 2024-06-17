@@ -50,3 +50,23 @@
      (let [factors [factors-of n]]
        (= n (reduce * factors))))))))
 
+(defn is-prime? [n]
+  (if (= 2 n)
+    true
+    (loop [candidates (range 2 (inc (Math/sqrt n)))]
+           (if (empty? candidates)
+             true
+             (if (zero? (rem n (first candidates)))
+               false
+               (recur (rest candidates)))))))
+
+(describe "factors"
+ (it "they are all primes"
+  (should-be
+   :result
+   (tc/quick-check
+    1000
+    (prop/for-all
+     [n gen-inputs]
+     (every? is-prime? (factors-of n)))))))
+
