@@ -1,5 +1,8 @@
 (ns factors.core-spec
   (:require
+   [clojure.test.check :as tc]
+   [clojure.test.check.generators :as gen]
+   [clojure.test.check.properties :as prop]
    [factors.core :refer :all]
    [speclj.core :refer :all]))
 
@@ -31,4 +34,19 @@
   (should= [71 839 1471 6857] (factors-of 600851475143)))
  (it "factors mersenne 2^31-1"
   (should= [2147483647] (factors-of (power2 31))))))
+
+(def gen-inputs (gen/large-integer* {:min 1 :max 1E9}))
+
+(declare n)
+
+(describe "properties"
+ (it "multiplies out property"
+  (should-be
+   :result
+   (tc/quick-check
+    1000
+    (prop/for-all
+     [n gen-inputs]
+     (let [factors [factors-of n]]
+       (= n (reduce * factors))))))))
 
