@@ -1,4 +1,18 @@
-(ns video-store.statement-policy)
+(ns video-store.statement-policy
+  (:require
+   [clojure.spec.alpha :as s]))
+
+(s/def ::customer-name string?)
+(s/def ::title string?)
+(s/def ::price pos?)
+(s/def ::movie (s/keys :req-un [::title ::price]))
+(s/def ::movies (s/coll-of ::movie))
+(s/def ::owed pos?)
+(s/def ::points pos-int?)
+(s/def ::statement-data (s/keys :req-un [::customer-name
+                                         ::movies
+                                         ::owed
+                                         ::points]))
 
 (defn- policy-movie-dispatch [policy rental]
   [(:type policy) (-> rental :movie :type)])
