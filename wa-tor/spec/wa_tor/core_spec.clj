@@ -224,5 +224,14 @@
                                                 -1)]
                          (should (shark/is? full-shark))
                          (should (water/is? where-shark-was))
-                         (should= expected-health (shark/health full-shark))))))
+                         (should= expected-health (shark/health full-shark))))
+
+                   (it "doesn't reproduce if not healthy enough"
+                       (let [shark (-> (shark/make)
+                                       (shark/set-health (dec config/shark-reproduction-health))
+                                       (animal/set-age config/shark-reproduction-age))
+                             world (-> (world/make 3 3)
+                                       (world/set-cell [1 1] shark))
+                             failed (animal/reproduce shark [1 1] world)]
+                         (should-be-nil failed)))))
 
