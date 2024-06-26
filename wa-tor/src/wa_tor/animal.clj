@@ -3,7 +3,6 @@
    [clojure.spec.alpha :as s]
    [wa-tor.animal :as animal]
    [wa-tor.cell :as cell]
-   [wa-tor.config :as config]
    [wa-tor.water :as water]
    [wa-tor.world :as world]))
 
@@ -11,27 +10,21 @@
 (s/def ::animal (s/keys :req [::age]))
 
 (defmulti move (fn [animal & _args] (::cell/type animal)))
-
 (defmulti reproduce (fn [animal & _args] (::cell/type animal)))
-
 (defmulti make-child ::cell/type)
+(defmulti get-reproduction-age ::cell/type)
 
-(defn make []
-  {::age 0})
-
-(defn age [animal]
-  (::age animal))
-
-(defn set-age [animal age]
-  (assoc animal ::age age))
-
-(defn increment-age [animal]
-  (update animal ::age inc))
+(defn make [] {::age 0})
+(defn age [animal] (::age animal))
+(defn set-age [animal age] (assoc animal ::age age))
+(defn increment-age [animal] (update animal ::age inc))
 
 (defn tick [animal loc world]
-  (-> animal
-      increment-age
-      (move loc world)))
+  (let [aged-animal (increment-age animal)
+        reproduction (reproduce aged-animal loc world)]
+    (if reproduction
+      reproduction
+      (move aged-animal loc world))))
 
 (defn do-move [animal loc world]
   (let [neighbors (world/neighbors world loc)
@@ -46,12 +39,12 @@
       [{loc (water/make)} {new-location animal}])))
 
 (defn do-reproduce [animal loc world]
-  (if (>= (age animal) config/fish-reproduction-age)
+  (if (>= (age animal) (animal/get-reproduction-age animal))
     (let [neighbors (world/neighbors world loc)
           birth-places (filter #(water/is? (world/get-cell world %)) neighbors)]
       (if (empty? birth-places)
         nil
-        [loc (set-age animal 0)
-         (rand-nth birth-places) (make-child animal)]))
+        [{loc (set-age animal 0)}
+         {(rand-nth birth-places) (make-child animal)}]))
     nil))
 
