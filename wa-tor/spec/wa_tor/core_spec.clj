@@ -101,7 +101,10 @@
             (it "reproduces"
                 (doseq [scenario
                         [{:constructor fish/make :tester fish/is?}
-                         {:constructor shark/make :tester shark/is?}]]
+                         {:constructor #(-> (shark/make)
+                                            (shark/set-health
+                                             (inc config/shark-reproduction-health)))
+                          :tester shark/is?}]]
                   (let [animal ((:constructor scenario))
                         reproduction-age (animal/get-reproduction-age animal)
                         animal (animal/set-age animal reproduction-age)

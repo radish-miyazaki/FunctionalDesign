@@ -59,5 +59,8 @@
 
 (defmethod animal/move ::shark [shark loc world] (animal/do-move shark loc world))
 
-(defmethod animal/reproduce ::shark [shark loc world] (animal/do-reproduce shark loc world))
+(defmethod animal/reproduce ::shark [shark loc world]
+  (if (>= (health shark) config/shark-reproduction-health)
+    (animal/do-reproduce shark loc world)
+    nil))
 

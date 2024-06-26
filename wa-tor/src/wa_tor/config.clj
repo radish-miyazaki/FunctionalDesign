@@ -6,4 +6,5 @@
 (def shark-starting-health 5)
 (def shark-eating-health 5)
 (def shark-max-health 10)
+(def shark-reproduction-health 8)
 
