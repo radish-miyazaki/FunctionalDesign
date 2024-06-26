@@ -3,6 +3,7 @@
    [speclj.core :refer :all]
    [wa-tor.animal :as animal]
    [wa-tor.cell :as cell]
+   [wa-tor.config :as config]
    [wa-tor.fish :as fish]
    [wa-tor.fish-imp]
    [wa-tor.shark :as shark]
@@ -183,5 +184,42 @@
                           fishes (filter fish/is? cells)
                           fish-count (count fishes)]
                       (should (< 50 fish-count)))
-                    (recur (world/tick world) (dec n)))))))
+                    (recur (world/tick world) (dec n))))))
+
+          (context "Shark"
+                   (it "starts with some health"
+                       (let [shark (shark/make)]
+                         (should= config/shark-starting-health
+                                  (shark/health shark))))
+
+                   (it "loses health with time"
+                       (let [small-world (-> (world/make 1 1)
+                                             (world/set-cell [0 0] (shark/make)))
+                             aged-world (world/tick small-world)
+                             aged-shark (world/get-cell aged-world [0 0])]
+                         (should= (dec config/shark-starting-health)
+                                  (shark/health aged-shark))))
+
+                   (it "dies when health goes to zero"
+                       (let [sick-shark (-> (shark/make)
+                                            (shark/set-health 1))
+                             small-world (-> (world/make 1 1)
+                                             (world/set-cell [0 0] sick-shark))
+                             aged-world (world/tick small-world)
+                             dead-shark (world/get-cell aged-world [0 0])]
+                         (should (water/is? dead-shark))))
+
+                   (it "eats when a fish is adjacent"
+                       (let [world (-> (world/make 2 1)
+                                       (world/set-cell [0 0] (fish/make))
+                                       (world/set-cell [1 0] (shark/make)))
+                             shark-ate-world (world/tick world)
+                             full-shark (world/get-cell shark-ate-world [0 0])
+                             where-shark-was (world/get-cell shark-ate-world [1 0])
+                             expected-health (+ config/shark-starting-health
+                                                config/shark-eating-health
+                                                -1)]
+                         (should (shark/is? full-shark))
+                         (should (water/is? where-shark-was))
+                         (should= expected-health (shark/health full-shark))))))
 
