@@ -233,5 +233,22 @@
                              world (-> (world/make 3 3)
                                        (world/set-cell [1 1] shark))
                              failed (animal/reproduce shark [1 1] world)]
-                         (should-be-nil failed)))))
+                         (should-be-nil failed)))
+
+
+                   (it "shares with both daughters after reproduction"
+                       (let [initial-health (inc config/shark-reproduction-health)
+                             pregnant-shark (-> (shark/make)
+                                                (animal/set-age (inc config/shark-reproduction-age))
+                                                (shark/set-health initial-health))
+                             world (-> (world/make 2 1)
+                                       (world/set-cell [0 0] pregnant-shark))
+                             new-world (world/tick world)
+                             daughter1 (world/get-cell new-world [0 0])
+                             daughter2 (world/get-cell new-world [1 0])
+                             expected-health (quot (dec initial-health) 2)]
+                         (should (shark/is? daughter1))
+                         (should (shark/is? daughter2))
+                         (should= expected-health (shark/health daughter1))
+                         (should= expected-health (shark/health daughter2))))))
 
