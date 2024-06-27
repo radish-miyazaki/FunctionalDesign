@@ -6,7 +6,7 @@
    [wa-tor.water :as water]))
 
 (defmethod cell/tick ::water/water [water loc _world]
-  (if (> (rand) config/water-evaltion-rate)
+  (if (> (rand) config/water-evalution-rate)
     [nil {loc (fish/make)}]
     [nil {loc water}]))
 

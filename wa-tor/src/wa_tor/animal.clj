@@ -7,16 +7,23 @@
    [wa-tor.world :as world]))
 
 (s/def ::age int?)
+
 (s/def ::animal (s/keys :req [::age]))
 
 (defmulti move (fn [animal & _args] (::cell/type animal)))
+
 (defmulti reproduce (fn [animal & _args] (::cell/type animal)))
+
 (defmulti make-child ::cell/type)
+
 (defmulti get-reproduction-age ::cell/type)
 
 (defn make [] {::age 0})
+
 (defn age [animal] (::age animal))
+
 (defn set-age [animal age] (assoc animal ::age age))
+
 (defn increment-age [animal] (update animal ::age inc))
 
 (defn tick [animal loc world]

@@ -4,9 +4,13 @@
    [wa-tor.cell :as cell]))
 
 (s/def ::location (s/tuple int? int?))
+
 (s/def ::cell #(contains? % ::cell/type))
+
 (s/def ::cells (s/map-of ::location ::cell))
+
 (s/def ::bounds ::location)
+
 (s/def ::world (s/and (s/keys :req [::cells ::bounds])
                       #(= (::type %) ::world)))
 

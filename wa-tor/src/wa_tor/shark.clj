@@ -9,6 +9,7 @@
    [wa-tor.world :as world]))
 
 (s/def ::health int?)
+
 (s/def ::shark (s/and #(= ::shark (::cell/type %))
                       ::animal/animal
                       (s/keys :req [::health])))
