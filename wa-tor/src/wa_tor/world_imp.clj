@@ -6,6 +6,7 @@
    [wa-tor.water :as water]
    [wa-tor.world :as world :refer :all]))
 
+;; Implementations
 (defmethod world/tick ::world/world [world]
   (let [cells (::world/cells world)]
         (loop [locs (keys cells)
@@ -32,7 +33,6 @@
                                moved-into
                                (conj moved-into to-loc))]
               (recur (rest locs) new-cells moved-into))))))
-
 (defmethod world/make-cell ::world/world [_factory-type cell-type]
   (condp = cell-type
     :default-cell (water/make)

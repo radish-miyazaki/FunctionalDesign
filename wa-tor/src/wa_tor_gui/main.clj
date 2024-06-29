@@ -10,15 +10,16 @@
    [wa-tor.world :as world]
    [wa-tor.world-imp]))
 
+(declare wator)
+
+;; Functions
 (defn- setup []
   (q/frame-rate 60)
   (q/color-mode :rgb)
   (-> (world/make 80 80)
       (world/set-cell [40 40] (fish/make))))
-
 (defn- update-state [world]
   (world/tick world))
-
 (defn- draw-state [world]
   (q/background 240)
   (let [cells (::world/cells world)]
@@ -35,8 +36,6 @@
         (apply q/fill color)
         (when-not (water/is? cell)
           (q/rect x y 11 11))))))
-
-(declare wator)
 
 (defn ^:export -main [& _args]
   (q/defsketch

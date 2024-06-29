@@ -6,33 +6,26 @@
    [wa-tor.water :as water]
    [wa-tor.world :as world]))
 
+;; Specifications
 (s/def ::age int?)
-
 (s/def ::animal (s/keys :req [::age]))
 
+;; Multimethods
 (defmulti move (fn [animal & _args] (::cell/type animal)))
-
 (defmulti reproduce (fn [animal & _args] (::cell/type animal)))
-
 (defmulti make-child ::cell/type)
-
 (defmulti get-reproduction-age ::cell/type)
 
 (defn make [] {::age 0})
-
 (defn age [animal] (::age animal))
-
 (defn set-age [animal age] (assoc animal ::age age))
-
 (defn increment-age [animal] (update animal ::age inc))
-
 (defn tick [animal loc world]
   (let [aged-animal (increment-age animal)
         reproduction (reproduce aged-animal loc world)]
     (if reproduction
       reproduction
       (move aged-animal loc world))))
-
 (defn do-move [animal loc world]
   (let [neighbors (world/neighbors world loc)
         moved-into (get world :moved-into #{})
@@ -44,7 +37,6 @@
     (if (= new-location loc)
       [nil {loc animal}]
       [{loc (water/make)} {new-location animal}])))
-
 (defn do-reproduce [animal loc world]
   (if (>= (age animal) (animal/get-reproduction-age animal))
     (let [neighbors (world/neighbors world loc)
